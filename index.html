@@ -177,6 +177,11 @@
         min-height: 44px;
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+      }
+
+      .phone-link span:first-child {
+        font-size: 18px;
       }
 
       .phone-link:hover {
@@ -436,10 +441,24 @@
         min-height: 44px;
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+        text-align: center;
+        flex-direction: column;
       }
 
       .floating-widget .widget-actions a:hover {
         transform: translateY(-2px);
+      }
+
+      .floating-widget .widget-actions a .phone-icon {
+        font-size: 18px;
+      }
+
+      .floating-widget .widget-actions a small {
+        display: block;
+        font-size: 11px;
+        opacity: 0.9;
+        margin-top: 2px;
       }
 
       .floating-widget .note {
@@ -812,11 +831,17 @@
   </head>
   <body>
     <div class="floating-widget" aria-label="페이라이프 상담 위젯">
-      <h4>즉시 상담 연결</h4>
+      <h4>24시 신속상담</h4>
       <p>24시간 언제든지 전화 주세요. 친절하게 안내드릴게요.</p>
       <div class="widget-actions">
-        <a href="tel:01046825533">010-4682-5533</a>
-        <a href="tel:01048855533">010-4885-5533</a>
+        <a href="tel:01048855533" class="widget-phone-link">
+          <span class="phone-icon">📞</span>
+          <span>24시 신속상담<br><small>010-4885-5533</small></span>
+        </a>
+        <a href="tel:01046825533" class="widget-phone-link">
+          <span class="phone-icon">📞</span>
+          <span>24시 신속상담<br><small>010-4682-5533</small></span>
+        </a>
       </div>
       <p class="note">개인정보 입력 없이 간편하게 문의하세요.</p>
     </div>
@@ -901,16 +926,22 @@
               통으로 상담부터 진행까지 바로 연결됩니다.
             </p>
             <div class="cta-actions">
-              <a href="tel:01048855533">주간 상담 연결</a>
-              <a href="tel:01046825533">야간 긴급 상담</a>
+              <a href="tel:01048855533">24시 신속상담</a>
+              <a href="tel:01046825533">24시 신속상담</a>
             </div>
           </div>
           <div class="contact-card">
             <h3>24시간 전문 상담</h3>
             <p>전화만 주시면 맞춤 한도와 진행 절차를 바로 안내해 드립니다.</p>
             <div class="phones">
-              <a class="phone-link" href="tel:01046825533">010-4682-5533</a>
-              <a class="phone-link" href="tel:01048855533">010-4885-5533</a>
+              <a class="phone-link" href="tel:01048855533">
+                <span>📞</span>
+                <span>24시 신속상담: 010-4885-5533</span>
+              </a>
+              <a class="phone-link" href="tel:01046825533">
+                <span>📞</span>
+                <span>24시 신속상담: 010-4682-5533</span>
+              </a>
             </div>
             <p class="contact-note">
               365일, 24시간 연중무휴<br />
@@ -1047,8 +1078,8 @@
             <h3>지금 전화로 빠르게 상담 받아보세요</h3>
             <p>개인정보 입력 없이, 통화 한 번으로 진행이 가능합니다.</p>
             <div class="cta-actions">
-              <a href="tel:01046825533">010-4682-5533</a>
-              <a href="tel:01048855533">010-4885-5533</a>
+              <a href="tel:01048855533">24시 신속상담: 010-4885-5533</a>
+              <a href="tel:01046825533">24시 신속상담: 010-4682-5533</a>
             </div>
           </div>
         </section>
@@ -1058,6 +1089,39 @@
     <footer>
       페이라이프 · 신용카드 한도 현금화 전문 · 상담전화 010-4682-5533 / 010-4885-5533
     </footer>
+
+    <script>
+      // 전화번호 클릭 시 자동 통화 연결 함수
+      function makePhoneCall(phoneNumber) {
+        // 하이픈 제거
+        const cleanNumber = phoneNumber.replace(/-/g, '');
+        // tel: 프로토콜로 통화 연결
+        window.location.href = 'tel:' + cleanNumber;
+      }
+
+      // 모든 전화번호 링크에 이벤트 리스너 추가
+      document.addEventListener('DOMContentLoaded', function() {
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        
+        phoneLinks.forEach(function(link) {
+          // onclick이 이미 있는 경우 제거하고 새로 추가
+          link.removeAttribute('onclick');
+          
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const phoneNumber = this.getAttribute('href').replace('tel:', '');
+            makePhoneCall(phoneNumber);
+          });
+
+          // 터치 이벤트도 추가 (모바일 최적화)
+          link.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            const phoneNumber = this.getAttribute('href').replace('tel:', '');
+            makePhoneCall(phoneNumber);
+          });
+        });
+      });
+    </script>
   </body>
 </html>
 
